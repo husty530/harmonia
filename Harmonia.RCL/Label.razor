@@ -1,0 +1,23 @@
+<p class="@Class" 
+    style="margin-left: @(HMargin)px; margin-right: @(HMargin)px; margin-top: @(VMargin)px; margin-bottom: @(VMargin)px; font-size: @(FontSize)px;">
+  @ChildContent
+</p>
+
+@code {
+
+  [Parameter]
+  public int HMargin { get; set; } = 5;
+
+  [Parameter]
+  public int VMargin { get; set; } = 5;
+
+  [Parameter]
+  public int FontSize { get; set; } = 16;
+
+  [Parameter]
+  public string Class { get; set; } = "";
+
+  [Parameter]
+  public RenderFragment ChildContent { get; set; }
+
+}

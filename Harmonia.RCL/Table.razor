@@ -1,0 +1,33 @@
+<div data-spy="scroll" data-offset="0" class="scroll-info w-100" style="text-align: center">
+  <table class="table table-hover" style="table-layout: fixed">
+    @if (Header is KeyValuePair<string, string> h)
+    {
+      <thead>
+        <tr>
+          <th scope="row" style="width: 50%">@h.Key</th>
+          <td>@h.Value</td>
+        </tr>
+      </thead>
+    }
+    <tbody>
+      @foreach (var x in Body)
+      {
+        <tr>
+          <th scope="row">@x.Key</th>
+          <td>@x.Value</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@code {
+
+  [Parameter]
+  public KeyValuePair<string, string>? Header { get; set; }
+
+  [Parameter]
+  public IDictionary<string, string> Body { get; set; }
+
+
+}

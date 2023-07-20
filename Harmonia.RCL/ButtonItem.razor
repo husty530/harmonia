@@ -1,0 +1,49 @@
+@if (Disabled)
+{
+  <input type="@(Multiple ? "checkbox" : "radio")" class="btn-check" name="@Key" id="@_id" autocomplete="off" @onclick="OnClicked" @onchange="OnChanged" disabled>
+}
+else
+{
+  @if (Checked)
+  {
+    <input type="@(Multiple ? "checkbox" : "radio")" class="btn-check" name="@Key" id="@_id" autocomplete="off" @onclick="OnClicked" @onchange="OnChanged" checked>
+  }
+  else
+  {
+    <input type="@(Multiple ? "checkbox" : "radio")" class="btn-check" name="@Key" id="@_id" autocomplete="off" @onclick="OnClicked" @onchange="OnChanged">
+  }
+}
+<label for="@_id" class="btn btn-@((Outline ? "outline-" : "") + Theme) flex-fill">@Text</label>
+
+@code {
+
+  string _id = Guid.NewGuid().ToString();
+
+  [Parameter]
+  public bool Multiple { get; set; } = false;
+
+  [Parameter]
+  public string Key { get; set; } = "key";
+
+  [Parameter]
+  public string Theme { get; set; } = "secondary";
+
+  [Parameter]
+  public bool Outline { get; set; } = false;
+
+  [Parameter]
+  public bool Checked { get; set; } = false;
+
+  [Parameter]
+  public bool Disabled { get; set; } = false;
+
+  [Parameter]
+  public string Text { get; set; } = "";
+
+  [Parameter]
+  public EventCallback<MouseEventArgs> OnClicked { get; set; }
+
+  [Parameter]
+  public EventCallback<ChangeEventArgs> OnChanged { get; set; }
+
+}

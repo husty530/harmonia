@@ -1,0 +1,19 @@
+<div class="btn-group@(IsVertial ? "-vertical" : "") d-flex" style="width: @(Width)%; padding-top: @(Padding)px; padding-bottom: @(Padding)px">
+  @ChildContent
+</div>
+
+@code {
+
+  [Parameter]
+  public bool IsVertial { get; set; } = false;
+
+  [Parameter]
+  public RenderFragment ChildContent { get; set; }
+
+  [Parameter]
+  public int Padding { get; set; } = 5;
+
+  [Parameter]
+  public int Width { get; set; } = 100;
+
+}

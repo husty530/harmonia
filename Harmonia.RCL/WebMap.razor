@@ -1,0 +1,20 @@
+﻿@inject ArcGisJsInterop ArcGis
+
+<div class="container-fluid full">
+  <div id="viewDiv" class="full">
+    @ChildContent
+  </div>
+</div>
+
+@code {
+
+  [Parameter]
+  public RenderFragment ChildContent { get; set; }
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    await base.OnAfterRenderAsync(firstRender);
+    await ArcGis.InitializeAsync();
+  }
+
+}

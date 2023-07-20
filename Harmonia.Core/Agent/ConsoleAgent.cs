@@ -1,0 +1,73 @@
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using Harmonia.Core.Serializer;
+
+namespace Harmonia.Core.Agent;
+
+public sealed class ConsoleAgent : AgentBase
+{
+
+  private readonly ConcurrentDictionary<string, string> _profile;
+  private readonly Process _process;
+  private readonly ISerializer _serializer;
+  private CancellationTokenSource? _cts;
+
+  public override IDictionary<string, string> Profile => _profile;
+
+  public ConsoleAgent(ISerializer serializer, string[] args)
+  {
+    _profile = new();
+    _serializer = serializer;
+    foreach (var p in Process.GetProcessesByName(Path.GetFileName(args[0])))
+    {
+      p.Kill();
+    }
+    _process = new()
+    {
+      StartInfo = new()
+      {
+        FileName = args[0],
+        Arguments = string.Join(' ', args[1..]),
+        RedirectStandardInput = true,
+        RedirectStandardOutput = true,
+        UseShellExecute = false,
+        CreateNoWindow = true
+      }
+    };
+  }
+
+  protected override void DoDispose()
+  {
+    _process.Dispose();
+  }
+
+  protected override void DoOpen()
+  {
+    _cts = new();
+    _process.Start();
+    Observable.Repeat(0, new EventLoopScheduler())
+      .Finally(_process.Close)
+      .TakeUntil(_ => _cts.IsCancellationRequested)
+      .Select(_ => _process.StandardOutput.ReadLine())
+      .Subscribe(x => 
+      {
+        if (x is null) return;
+        foreach (var y in _serializer.Deserialize(x))
+          _profile.AddOrUpdate(y.Key, y.Value, (k, v) => y.Value);
+      });
+  }
+
+  protected override void DoClose()
+  {
+    _cts?.Cancel();
+  }
+
+  protected override void DoSet(IDictionary<string, string> value)
+  {
+    var message = _serializer.Serialize(value);
+    _process.StandardInput.WriteLine(message);
+  }
+
+}

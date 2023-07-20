@@ -1,0 +1,13 @@
+{
+  "Agents": [
+    {
+      "Type": "console",
+      "Id": "mock",
+      "Args": [ "../MockCLI/bin/Debug/net7.0/MockCLI.exe" ],
+      "Serializer": {
+        "Type": "separator",
+        "Args": [ ",", ":" ]
+      }
+    }
+  ]
+}
