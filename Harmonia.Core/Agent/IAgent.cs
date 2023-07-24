@@ -85,9 +85,10 @@ public static class AgentFactory
     var serializer = SerializerFactory.Create(config.Serializer);
     return config.Type.ToLower() switch
     {
-      "console" => new ConsoleAgent(serializer, config.Args),
-      "rosbridge" => new RosBridgeAgent(serializer, config.Args),
-      "tcp" => new TcpSocketAgent(serializer, config.Args),
+      "console" => new ConsoleAgent(serializer, config.Args),     // 0:path, 1:args
+      "tcpserver" => new TcpServerAgent(serializer, config.Args), // 0:port, (1:encoding)
+      "tcpclient" => new TcpClientAgent(serializer, config.Args), // 0:ip, 1:port, (2:encoding)
+      "udp" => new UdpAgent(serializer, config.Args),             // 0:local port, 1:remote ip, 2:remote port, (3:encoding)
       _ => throw new NotSupportedException()
     };
   }
