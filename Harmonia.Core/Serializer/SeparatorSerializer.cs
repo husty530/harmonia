@@ -22,7 +22,6 @@ public sealed class SeparatorSerializer : ISerializer
     return value
       .Split(_elementSeparator)
       .Select(x => x.Split(_keyValueSeparator))
-      .Where(x => x.Length > 1)
-      .ToDictionary(x => x[0].Trim(), x => x[1].Trim());
+      .ToDictionary(x => x[0].Trim(), x => x.Length > 1 ? x[1].Trim() : "");
   }
 }

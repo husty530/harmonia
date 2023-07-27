@@ -18,6 +18,7 @@ public static class SerializerFactory
   {
     return config.Type.ToLower() switch
     {
+      "value" => new ValueOnlySerializer(),
       "json" => new JsonSerializer(),
       "xml" => new XmlSerializer(),
       "separator" => new SeparatorSerializer(config.Args[0], config.Args[1]),
