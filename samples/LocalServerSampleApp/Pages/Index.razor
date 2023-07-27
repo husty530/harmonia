@@ -97,7 +97,7 @@
     {
       if (on) _selectedIndexList.Add(index);
       else _selectedIndexList.Remove(index);
-      await Gis.SetColorAsync(_id, index, on ? Color.Red : Color.Blue);
+      await Gis.SetPathColorAsync(_id, index, on ? Color.Red : Color.Blue);
     }
   }
 

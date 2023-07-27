@@ -1,11 +1,13 @@
 let _center = [141.35, 43.07];
 let _zoom = 16;
+let _pointGraphics = {};
 let _mapGraphics = {}
 let _markerGraphics = {}
 let _textGraphics = {}
 let _trajectoryInfo = {}
 let arc_makePoly = null;
 let arc_drawPoint = null;
+let arc_removePoint = null;
 let arc_createMap = null;
 let arc_setColor = null;
 let arc_drawMap = null;
@@ -47,7 +49,11 @@ export async function hideMap(id) {
 }
 
 export async function drawPoint(id, lat, lon, color) {
-  await arc_drawPoint(lat, lon, color);
+  await arc_drawPoint(id, lat, lon, color);
+}
+
+export async function removePoint(id) {
+  await arc_removePoint(id);
 }
 
 export async function drawMarker(id, lat, lon, rings, color) {
@@ -101,7 +107,7 @@ require([
 
   arc_makePoly = p => new Polyline({ paths: p });
 
-  arc_drawPoint = async (lat, lon, color) => {
+  arc_drawPoint = async (id, lat, lon, color) => {
     const point = {
       type: "point",
       longitude: lon,
@@ -120,7 +126,12 @@ require([
       geometry: point,
       symbol: simpleMarkerSymbol
     });
-    await view.graphics.add(pointGraphic);
+    _pointGraphics[id] = pointGraphic;
+    await view.graphics.add(_pointGraphics[id]);
+  }
+
+  arc_removePoint = async id => {
+    await view.graphics.remove(_pointGraphics[id]);
   }
 
   arc_createMap = (id, lines, color) => {

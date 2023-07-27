@@ -50,13 +50,25 @@ public sealed class ArcGisJsInterop : IAsyncDisposable
     catch { }
   }
 
+  public async ValueTask AddPointAsync(string id, WgsPoint point, List<int> color)
+  {
+    if (_module is null) return;
+    await _module.InvokeVoidAsync("drawPoint", id, point.Latitude, point.Longitude, color).ConfigureAwait(false);
+  }
+
+  public async ValueTask RemovePointAsync(string id)
+  {
+    if (_module is null) return;
+    await _module.InvokeVoidAsync("removePoint", id).ConfigureAwait(false);
+  }
+
   public async ValueTask RegisterMapAsync(string id, WgsMap map, List<int> color)
   {
     if (_module is null) return;
     await _module.InvokeVoidAsync("registerMap", id, map, color).ConfigureAwait(false);
   }
 
-  public async Task SetColorAsync(string id, int index, List<int> color)
+  public async Task SetPathColorAsync(string id, int index, List<int> color)
   {
     if (_module is null) return;
     await _module.InvokeVoidAsync("setPathColor", id, index, color).ConfigureAwait(false);
