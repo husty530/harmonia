@@ -116,8 +116,9 @@ require([
     const simpleMarkerSymbol = {
       type: "simple-marker",
       color: color,
+      size: 16,
       outline: {
-        color: [255, 255, 255],
+        color: [ 0, 0, 0 ],
         width: 1
       }
     };
@@ -126,12 +127,15 @@ require([
       geometry: point,
       symbol: simpleMarkerSymbol
     });
+    if (_pointGraphics[id])
+      await view.graphics.remove(_pointGraphics[id]);
     _pointGraphics[id] = pointGraphic;
     await view.graphics.add(_pointGraphics[id]);
   }
 
   arc_removePoint = async id => {
-    await view.graphics.remove(_pointGraphics[id]);
+    if (_pointGraphics[id])
+      await view.graphics.remove(_pointGraphics[id]);
   }
 
   arc_createMap = (id, lines, color) => {

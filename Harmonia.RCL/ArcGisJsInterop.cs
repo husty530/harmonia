@@ -13,6 +13,8 @@ public sealed class ArcGisJsInterop : IAsyncDisposable
 
   public static Subject<string> SelectNotifier { set; get; } = new();
 
+  public bool IsDisposed { get; private set; }
+
   public ArcGisJsInterop(IJSRuntime js)
   {
     _js = js;
@@ -47,67 +49,118 @@ public sealed class ArcGisJsInterop : IAsyncDisposable
       if (_module is null) return;
       await _module.InvokeVoidAsync("drawMarker", id, point.Latitude, point.Longitude, ring, color).ConfigureAwait(false);
     }
+    catch (ObjectDisposedException) { IsDisposed = true; }
     catch { }
   }
 
   public async ValueTask AddPointAsync(string id, WgsPoint point, List<int> color)
   {
     if (_module is null) return;
-    await _module.InvokeVoidAsync("drawPoint", id, point.Latitude, point.Longitude, color).ConfigureAwait(false);
+    try
+    {
+      await _module.InvokeVoidAsync("drawPoint", id, point.Latitude, point.Longitude, color).ConfigureAwait(false);
+    }
+    catch (ObjectDisposedException) { IsDisposed = true; }
+    catch { }
   }
 
   public async ValueTask RemovePointAsync(string id)
   {
     if (_module is null) return;
-    await _module.InvokeVoidAsync("removePoint", id).ConfigureAwait(false);
+    try
+    {
+      await _module.InvokeVoidAsync("removePoint", id).ConfigureAwait(false);
+    }
+    catch (ObjectDisposedException) { IsDisposed = true; }
+    catch { }
   }
 
   public async ValueTask RegisterMapAsync(string id, WgsMap map, List<int> color)
   {
     if (_module is null) return;
-    await _module.InvokeVoidAsync("registerMap", id, map, color).ConfigureAwait(false);
+    try
+    {
+      await _module.InvokeVoidAsync("registerMap", id, map, color).ConfigureAwait(false);
+    }
+    catch (ObjectDisposedException) { IsDisposed = true; }
+    catch { }
   }
 
   public async Task SetPathColorAsync(string id, int index, List<int> color)
   {
     if (_module is null) return;
-    await _module.InvokeVoidAsync("setPathColor", id, index, color).ConfigureAwait(false);
+    try
+    {
+      await _module.InvokeVoidAsync("setPathColor", id, index, color).ConfigureAwait(false);
+    }
+    catch (ObjectDisposedException) { IsDisposed = true; }
+    catch { }
   }
 
   public async Task ShowMapAsync(string id)
   {
     if (_module is null) return;
-    await _module.InvokeVoidAsync("showMap", id).ConfigureAwait(false);
+    try
+    {
+      await _module.InvokeVoidAsync("showMap", id).ConfigureAwait(false);
+    }
+    catch (ObjectDisposedException) { IsDisposed = true; }
+    catch { }
   }
 
   public async Task HideMapAsync(string id)
   {
     if (_module is null) return;
-    await _module.InvokeVoidAsync("hideMap", id).ConfigureAwait(false);
+    try
+    {
+      await _module.InvokeVoidAsync("hideMap", id).ConfigureAwait(false);
+    }
+    catch (ObjectDisposedException) { IsDisposed = true; }
+    catch { }
   }
 
   public async Task AddTrajectoryAsync(string id, WgsPoint point)
   {
     if (_module is null) return;
-    await _module.InvokeVoidAsync("addTrajectory", id, point.Latitude, point.Longitude).ConfigureAwait(false);
+    try
+    {
+      await _module.InvokeVoidAsync("addTrajectory", id, point.Latitude, point.Longitude).ConfigureAwait(false);
+    }
+    catch (ObjectDisposedException) { IsDisposed = true; }
+    catch { }
   }
 
   public async Task RemoveTrajectoryAsync(string id)
   {
     if (_module is null) return;
-    await _module.InvokeVoidAsync("removeTrajectory", id).ConfigureAwait(false);
+    try
+    {
+      await _module.InvokeVoidAsync("removeTrajectory", id).ConfigureAwait(false);
+    }
+    catch (ObjectDisposedException) { IsDisposed = true; }
+    catch { }
   }
 
   public async Task RemoveAllAsync(string id)
   {
     if (_module is null) return;
-    await _module.InvokeVoidAsync("removeAll", id).ConfigureAwait(false);
+    try
+    {
+      await _module.InvokeVoidAsync("removeAll", id).ConfigureAwait(false);
+    }
+    catch (ObjectDisposedException) { IsDisposed = true; }
+    catch { }
   }
 
   public async Task FocusSelectedObjectAsync(string id)
   {
     if (_module is null) return;
-    await _module.InvokeVoidAsync("selectMarker", id).ConfigureAwait(false);
+    try
+    {
+      await _module.InvokeVoidAsync("selectMarker", id).ConfigureAwait(false);
+    }
+    catch (ObjectDisposedException) { IsDisposed = true; }
+    catch { }
   }
 
   [JSInvokable]

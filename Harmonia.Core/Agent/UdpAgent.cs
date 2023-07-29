@@ -14,8 +14,7 @@ public class UdpAgent : AgentBase
   private readonly ConcurrentDictionary<string, string> _profile;
   private readonly ISerializer _serializer;
   private readonly UdpClient _client;
-  private readonly string _ip;
-  private readonly int _port;
+  private readonly IPEndPoint? _ep;
   private readonly Encoding _encoding;
   private CancellationTokenSource? _cts;
 
@@ -25,9 +24,14 @@ public class UdpAgent : AgentBase
   {
     _profile = new();
     _serializer = serializer;
-    _client = new(int.Parse(args[0]));
-    _ip = args[1];
-    _port = int.Parse(args[2]);
+    var lp = -1;
+    foreach (var arg in args)
+    {
+      var key = arg.Split(" ")[0].ToLower();
+      if (key is "listen") lp = int.Parse(arg.Split(" ")[1]);
+      else if (key is "connect") _ep = IPEndPoint.Parse(arg.Split(" ")[1]);
+    }
+    _client = lp is -1 ? new() : new(lp);
     _encoding = Encoding.Default;
     if (args.Length > 3)
     {
@@ -51,7 +55,8 @@ public class UdpAgent : AgentBase
   {
     IPEndPoint? ep = null;
     _cts = new();
-    _client.Connect(_ip, _port);
+    if (_ep is IPEndPoint p)
+      _client.Connect(p);
     Observable.Repeat(0, new EventLoopScheduler())
       .Finally(_client.Close)
       .TakeUntil(_ => _cts.IsCancellationRequested)
@@ -74,7 +79,10 @@ public class UdpAgent : AgentBase
   protected override void DoSet(IDictionary<string, string> value)
   {
     var data = _encoding.GetBytes(_serializer.Serialize(value));
-    _client.Send(data, _ip, _port);
+    if (_ep is IPEndPoint p)
+      _client.Send(data, p);
+    else 
+      _client.Send(data);
   }
 
 }
