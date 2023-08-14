@@ -1,19 +1,19 @@
 @if (Disabled)
 {
-  <input type="@(Multiple ? "checkbox" : "radio")" class="btn-check" name="@Key" id="@_id" autocomplete="off" @onclick="OnClicked" @onchange="OnChanged" disabled>
+  <input type=@(Multiple ? "checkbox" : "radio") class="btn-check" name=@Key id=@_id autocomplete="off" @onclick=OnClicked @onchange=OnChanged disabled>
 }
 else
 {
   @if (Checked)
   {
-    <input type="@(Multiple ? "checkbox" : "radio")" class="btn-check" name="@Key" id="@_id" autocomplete="off" @onclick="OnClicked" @onchange="OnChanged" checked>
+    <input type=@(Multiple ? "checkbox" : "radio") class="btn-check" name=@Key id=@_id autocomplete="off" @onclick=OnClicked @onchange=OnChanged checked>
   }
   else
   {
-    <input type="@(Multiple ? "checkbox" : "radio")" class="btn-check" name="@Key" id="@_id" autocomplete="off" @onclick="OnClicked" @onchange="OnChanged">
+    <input type=@(Multiple ? "checkbox" : "radio") class="btn-check" name=@Key id=@_id autocomplete="off" @onclick=OnClicked @onchange=OnChanged>
   }
 }
-<label for="@_id" class="btn btn-@((Outline ? "outline-" : "") + Theme) flex-fill">@Text</label>
+<label for=@_id class="btn btn-@((Outline ? "outline-" : "") + Theme) flex-fill">@Text</label>
 
 @code {
 
