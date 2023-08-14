@@ -88,4 +88,10 @@ public sealed class TcpClientAgent : AgentBase
       _writer.WriteLine(_serializer.Serialize(value));
   }
 
+  protected override void DoSetRawString(string value)
+  {
+    if (_writer is not null)
+      _writer.WriteLine(value);
+  }
+
 }

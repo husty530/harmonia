@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Harmonia.Core.Serializer;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Harmonia.Core.Agent;
 
@@ -82,6 +83,15 @@ public class UdpAgent : AgentBase
     if (_ep is IPEndPoint p)
       _client.Send(data, p);
     else 
+      _client.Send(data);
+  }
+
+  protected override void DoSetRawString(string value)
+  {
+    var data = _encoding.GetBytes(value);
+    if (_ep is IPEndPoint p)
+      _client.Send(data, p);
+    else
       _client.Send(data);
   }
 

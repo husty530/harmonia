@@ -13,7 +13,9 @@ public interface IAgent : IDisposable
   public void Set(KeyValuePair<string, string> value);
   public void Set(string key, string value);
   public void Set(string key);
+  public void SetRawString(string value);
   public bool TryGet<T>(string key, out T value);
+  public IDictionary<string, string> GetOrderedProfile(IEnumerable<string> keys);
 }
 
 public abstract class AgentBase : IAgent
@@ -45,6 +47,7 @@ public abstract class AgentBase : IAgent
   public void Set(KeyValuePair<string, string> value) => Set(new Dictionary<string, string>(new[] { value }));
   public void Set(string key, string value) => Set(new KeyValuePair<string, string>(key, value));
   public void Set(string key) => Set(key, "");
+  public void SetRawString(string value) => DoSetRawString(value);
   public bool TryGet<T>(string key, out T output)
   {
     output = default!;
@@ -64,10 +67,19 @@ public abstract class AgentBase : IAgent
     }
     return false;
   }
+  public IDictionary<string, string> GetOrderedProfile(IEnumerable<string> keys)
+  {
+    var dict = new Dictionary<string, string>();
+    foreach (var key in keys)
+      if (Profile.TryGetValue(key, out var value))
+        dict.Add(key, value);
+    return dict;
+  }
   protected abstract void DoDispose();
   protected abstract void DoOpen();
   protected abstract void DoClose();
   protected abstract void DoSet(IDictionary<string, string> value);
+  protected abstract void DoSetRawString(string value);
 }
 
 public class AgentConfig

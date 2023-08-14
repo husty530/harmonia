@@ -14,7 +14,14 @@
       {
         <tr>
           <th scope="row">@x.Key</th>
-          <td>@x.Value</td>
+          @switch(x.Value)
+          {
+            case StringItem v:
+              <td>@v.Value</td>
+              break;
+            default:
+              break;
+          }
         </tr>
       }
     </tbody>
@@ -27,7 +34,6 @@
   public KeyValuePair<string, string>? Header { get; set; }
 
   [Parameter]
-  public IDictionary<string, string> Body { get; set; }
-
+  public IDictionary<string, IComponent> Body { get; set; }
 
 }

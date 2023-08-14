@@ -20,15 +20,11 @@ public sealed class ConsoleAgent : AgentBase
   {
     _profile = new();
     _serializer = serializer;
-    foreach (var p in Process.GetProcessesByName(Path.GetFileName(args[0])))
-    {
-      p.Kill();
-    }
     _process = new()
     {
       StartInfo = new()
       {
-        FileName = args[0],
+        FileName = Path.GetFileNameWithoutExtension(args[0]),
         Arguments = string.Join(' ', args[1..]),
         RedirectStandardInput = true,
         RedirectStandardOutput = true,
@@ -45,6 +41,10 @@ public sealed class ConsoleAgent : AgentBase
 
   protected override void DoOpen()
   {
+    foreach (var p in Process.GetProcessesByName(_process.StartInfo.FileName))
+    {
+      p.Kill();
+    }
     _cts = new();
     _process.Start();
     Observable.Repeat(0, new EventLoopScheduler())
@@ -68,6 +68,11 @@ public sealed class ConsoleAgent : AgentBase
   {
     var message = _serializer.Serialize(value);
     _process.StandardInput.WriteLine(message);
+  }
+
+  protected override void DoSetRawString(string value)
+  {
+    _process.StandardInput.WriteLine(value);
   }
 
 }
