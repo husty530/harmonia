@@ -1,0 +1,46 @@
+<div class="py-1 rounded">
+  <div class="py-2" style="text-align: center">
+    @if(_isOpened)
+    {
+      <input type="checkbox" class="btn-check" id=@_id autocomplete="off" @onchange=@onChanged checked>
+    }
+    else
+    {
+      <input type="checkbox" class="btn-check" id=@_id autocomplete="off" @onchange=@onChanged>
+    }
+    <label for=@_id class="btn btn-@((Outline ? "outline-" : "") + Theme) flex-fill w-100">@Text</label>
+  </div>
+  @if(_isOpened)
+  {
+    @ChildContent
+  }
+</div>
+
+@code {
+
+  string _id = Guid.NewGuid().ToString();
+  bool _isOpened;
+
+  [Parameter]
+  public string Theme { get; set; } = "secondary";
+
+  [Parameter]
+  public bool Outline { get; set; } = true;
+
+  [Parameter]
+  public string Text { get; set; } = "";
+
+  [Parameter]
+  public RenderFragment ChildContent { get; set; }
+
+  [Parameter]
+  public EventCallback<bool> OnChanged { get; set; }
+
+  async Task onChanged(ChangeEventArgs e)
+  {
+    _isOpened = !_isOpened;
+    if (bool.TryParse(e.Value.ToString(), out var v))
+      await OnChanged.InvokeAsync(v);
+  }
+
+}

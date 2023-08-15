@@ -1,0 +1,36 @@
+<SubmitForm OnSubmitted=@(async _ => await OnSubmitted.InvokeAsync(Value))>
+  <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" id=@_id value=@Value @onchange=onChanged>
+    <label class="form-check-label" style="vertical-align: middle" for=@_id>@(Value ? TrueText : FalseText)</label>
+  </div>
+</SubmitForm>
+
+@code {
+
+  string _id = Guid.NewGuid().ToString();
+
+  [Parameter]
+  public bool Value { get; set; }
+
+  [Parameter]
+  public string TrueText { get; set; } = "";
+
+  [Parameter]
+  public string FalseText { get; set; } = "";
+
+  [Parameter]
+  public EventCallback<bool> OnChanged { get; set; }
+
+  [Parameter]
+  public EventCallback<bool> OnSubmitted { get; set; }
+
+  async Task onChanged(ChangeEventArgs e)
+  {
+    if (bool.TryParse(e.Value.ToString(), out var val))
+    {
+      Value = val;
+      await OnChanged.InvokeAsync(Value);
+    }
+  }
+
+}

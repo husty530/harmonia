@@ -63,7 +63,7 @@
   }
 
   <br /><br />
-  <Table Header="@(new("key", "value"))" Body="@_agent.Profile.OrderBy(c => c.Key).ToDictionary(x => x.Key, x => x.Value)" />
+  <TextTable Header="@(new("key", "value"))" Body="@_agent.Profile.OrderBy(c => c.Key).ToDictionary(x => x.Key, x => x.Value)" />
 
 </SideBar>
 

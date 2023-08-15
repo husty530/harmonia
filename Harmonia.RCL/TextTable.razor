@@ -1,0 +1,30 @@
+<Table>
+  @if (Header is KeyValuePair<string, string> h)
+  {
+    <thead>
+      <tr>
+        <th scope="row" style="width: 50%">@h.Key</th>
+        <td>@h.Value</td>
+      </tr>
+    </thead>
+  }
+  <tbody>
+    @foreach (var x in Body)
+    {
+      <tr>
+        <th scope="row">@x.Key</th>
+        <td>@x.Value</td>
+      </tr>
+    }
+  </tbody>
+</Table>
+
+@code {
+
+  [Parameter]
+  public KeyValuePair<string, string>? Header { get; set; }
+
+  [Parameter]
+  public IDictionary<string, string> Body { get; set; }
+
+}
