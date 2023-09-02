@@ -12,7 +12,7 @@ public sealed class ConsoleAgent : AgentBase
   private readonly ConcurrentDictionary<string, string> _profile;
   private readonly Process _process;
   private readonly ISerializer _serializer;
-  private CancellationTokenSource? _cts;
+  private IDisposable? _connector;
 
   public override IDictionary<string, string> Profile => _profile;
 
@@ -45,13 +45,11 @@ public sealed class ConsoleAgent : AgentBase
     {
       p.Kill();
     }
-    _cts = new();
     _process.Start();
-    Observable.Repeat(0, new EventLoopScheduler())
+    _connector = Observable.Repeat(0, new EventLoopScheduler())
       .Finally(_process.Close)
-      .TakeUntil(_ => _cts.IsCancellationRequested)
       .Select(_ => _process.StandardOutput.ReadLine())
-      .Subscribe(x => 
+      .Subscribe(x =>
       {
         if (x is null) return;
         foreach (var y in _serializer.Deserialize(x))
@@ -61,7 +59,7 @@ public sealed class ConsoleAgent : AgentBase
 
   protected override void DoClose()
   {
-    _cts?.Cancel();
+    _connector?.Dispose();
   }
 
   protected override void DoSet(IDictionary<string, string> value)

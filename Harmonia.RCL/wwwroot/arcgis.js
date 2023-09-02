@@ -67,6 +67,10 @@ export async function drawMarker(id, lat, lon, rings, color) {
   await arc_drawMarker(id, lat, lon, symbol);
 }
 
+export async function removeMarker(id) {
+  await arc_removeMarker(id);
+}
+
 export async function addTrajectory(id, lat, lon) {
   await arc_drawTrajectory(id, lat, lon);
 }

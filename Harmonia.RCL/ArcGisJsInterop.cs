@@ -33,6 +33,7 @@ public sealed class ArcGisJsInterop : IAsyncDisposable
 
   public async ValueTask PutMarkerAsync(string id, WgsPoint point, double heading, List<int> color)
   {
+    if (_module is null) return;
     heading = heading * PI / 180;
     var r = 30;
     var ptx = r * Cos(PI / 2 - heading) * 0.8;
@@ -46,8 +47,18 @@ public sealed class ArcGisJsInterop : IAsyncDisposable
     var ring = new double[] { ptx, pty, plx, ply, pbx, pby, prx, pry };
     try
     {
-      if (_module is null) return;
       await _module.InvokeVoidAsync("drawMarker", id, point.Latitude, point.Longitude, ring, color).ConfigureAwait(false);
+    }
+    catch (ObjectDisposedException) { IsDisposed = true; }
+    catch { }
+  }
+
+  public async ValueTask RemoveMarkerAsync(string id)
+  {
+    if (_module is null) return;
+    try
+    {
+      await _module.InvokeVoidAsync("removeMarker", id).ConfigureAwait(false);
     }
     catch (ObjectDisposedException) { IsDisposed = true; }
     catch { }
