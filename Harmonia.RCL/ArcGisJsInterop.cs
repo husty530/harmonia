@@ -35,7 +35,7 @@ public sealed class ArcGisJsInterop : IAsyncDisposable
   {
     if (_module is null) return;
     heading = heading * PI / 180;
-    var r = 30;
+    var r = 20;
     var ptx = r * Cos(PI / 2 - heading) * 0.8;
     var pty = r * Sin(PI / 2 - heading) * 0.8;
     var pbx = r * Cos(-PI / 2 - heading) / 2;

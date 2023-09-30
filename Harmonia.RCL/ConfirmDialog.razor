@@ -1,0 +1,62 @@
+<div class="modal fade @_show" tabindex="-1" style="display: @_display">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">@Title</h5>
+      </div>
+      <div class="modal-body">
+        @Message
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" @onclick="() => SelectAction(false)">@CancelButtonCaption</button>
+        <button type="button" class="btn btn-primary" @onclick="() => SelectAction(true)">@OKButtonCaption</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade @_show" style="display: @_display"></div>
+
+@code {
+
+  [Parameter]
+  public string Title { get; set; } = "Dialog title";
+
+  [Parameter]
+  public string Message { get; set; } = "Message";
+
+  [Parameter]
+  public string OKButtonCaption { get; set; }
+
+  [Parameter]
+  public string CancelButtonCaption { get; set; }
+
+  [Parameter]
+  public EventCallback<bool> ActionSelected { get; set; }
+
+  string _display = "none;";
+  string _show = "";
+
+  public async Task ShowDialog()
+  {
+    _display = "block";
+    await Task.Delay(50);
+    _show = "show";
+    StateHasChanged();
+  }
+
+  async Task HideDialog()
+  {
+    _show = "";
+    await Task.Delay(200);
+    _display = "none";
+    StateHasChanged();
+  }
+
+  async Task SelectAction(bool value)
+  {
+    await HideDialog();
+    await ActionSelected.InvokeAsync(value);
+  }
+
+}
